@@ -44,7 +44,7 @@ export type ApplicantPreview = {
 };
 
 export const demonstrationNotice =
-  "Counts and rows are calculated from fictional sample records bundled with this app. Nothing on this page is saved.";
+  "All records are fictional and stored persistently in the demo PostgreSQL database.";
 
 /**
  * Fictional sample jobs. Active jobs on the overview are those with status "Active".
@@ -164,35 +164,4 @@ export const demoApplicants = [
   },
 ] as const satisfies readonly DemoApplicant[];
 
-const jobsById = new Map(demoJobs.map((job) => [job.id, job]));
-
 export const recentApplicantLimit = 8;
-
-export function getDashboardSummary(): DashboardSummary {
-  return {
-    totalApplicants: demoApplicants.length,
-    inReview: demoApplicants.filter((applicant) => applicant.stage === "In review")
-      .length,
-    shortlisted: demoApplicants.filter(
-      (applicant) => applicant.stage === "Shortlisted",
-    ).length,
-    activeJobs: demoJobs.filter((job) => job.status === "Active").length,
-  };
-}
-
-export function getRecentApplicants(
-  limit = recentApplicantLimit,
-): ApplicantPreview[] {
-  return demoApplicants
-    .slice()
-    .sort((a, b) => b.appliedOn.localeCompare(a.appliedOn))
-    .slice(0, limit)
-    .map((applicant) => ({
-      id: applicant.id,
-      name: applicant.name,
-      email: applicant.email,
-      position: jobsById.get(applicant.jobId)?.title ?? "Unknown role",
-      appliedOn: applicant.appliedOn,
-      stage: applicant.stage,
-    }));
-}

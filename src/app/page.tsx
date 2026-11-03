@@ -1,32 +1,30 @@
 import type { Metadata } from "next";
-import { RecentApplicants } from "@/components/recent-applicants";
-import { SummaryCards } from "@/components/summary-cards";
-import {
-  demonstrationNotice,
-  getDashboardSummary,
-  getRecentApplicants,
-} from "@/lib/demo-data";
+import { Suspense } from "react";
+import { DashboardLoading } from "@/components/dashboard-loading";
+import { OverviewData } from "@/components/overview-data";
+import { OverviewErrorBoundary } from "@/components/overview-error";
+import { demonstrationNotice } from "@/lib/demo-data";
 
 export const metadata: Metadata = {
   title: {
     absolute: "Overview · Screenline",
   },
   description:
-    "Demonstration overview of sample applicants, pipeline stages, and active jobs.",
+    "Overview of fictional applications and jobs stored in the demo PostgreSQL database.",
 };
 
 export default function OverviewPage() {
-  const summary = getDashboardSummary();
-  const recentApplicants = getRecentApplicants();
-
   return (
     <>
       <p className="rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm leading-6 text-slate-600">
         <span className="font-medium text-slate-900">Demonstration data. </span>
         {demonstrationNotice}
       </p>
-      <SummaryCards summary={summary} />
-      <RecentApplicants applicants={recentApplicants} />
+      <OverviewErrorBoundary>
+        <Suspense fallback={<DashboardLoading />}>
+          <OverviewData />
+        </Suspense>
+      </OverviewErrorBoundary>
     </>
   );
 }

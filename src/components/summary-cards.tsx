@@ -13,7 +13,7 @@ const summaryItems: {
   {
     key: "totalApplicants",
     label: "Total applicants",
-    detail: "All fictional records in the sample set",
+    detail: "Applications stored in the database",
   },
   {
     key: "inReview",
@@ -28,7 +28,7 @@ const summaryItems: {
   {
     key: "activeJobs",
     label: "Active jobs",
-    detail: "Sample jobs with status Active",
+    detail: "Jobs with status Active",
   },
 ];
 

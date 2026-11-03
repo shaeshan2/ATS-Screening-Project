@@ -139,8 +139,8 @@ export function AppShell({ children }: { children: ReactNode }) {
         </nav>
 
         <p className="mt-auto border-t border-white/10 px-4 py-4 text-xs leading-5 text-white/60">
-          Demonstration workspace. Overview figures are sample records and are
-          not stored.
+          Demonstration workspace. Overview figures are fictional records stored
+          in the demo database.
         </p>
       </aside>
 

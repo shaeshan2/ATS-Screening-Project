@@ -1,6 +1,6 @@
 # Screenline data model
 
-This document describes the PostgreSQL schema in `src/db/schema.ts`. The tables are defined with Drizzle ORM. They have not been migrated or seeded. The recruiter dashboard still reads the fictional records in `src/lib/demo-data.ts`.
+This document describes the PostgreSQL schema in `src/db/schema.ts`. The tables are defined with Drizzle ORM. `npm run db:seed` inserts fictional jobs, candidates, and applications. It does not insert notes or events. The overview reads these tables through `src/db/queries/dashboard.ts`. `src/lib/demo-data.ts` still supplies the seed records and the stage labels.
 
 ## Tables
 
@@ -102,5 +102,5 @@ A candidate and a job can each have many applications. A candidate can apply to 
 - `updated_at` is refreshed by Drizzle when a row is updated through the ORM (`$onUpdate`). There is no database trigger. A raw SQL update will not move `updated_at` unless the statement sets it.
 - Skills stay as text arrays. A separate skills table is not needed until skills are shared, searched, or ranked.
 - `actor_name` is stored as text. There is no users or authentication table in this iteration.
-- The runtime client in `src/db/client.ts` still uses the pooled `DATABASE_URL` and is not bound to this schema yet. `drizzle.config.ts` uses `DATABASE_URL_UNPOOLED` for `db:generate` and `db:migrate`. The migration folder is `./drizzle`. No migration has been generated or applied.
+- The runtime client in `src/db/client.ts` still uses the pooled `DATABASE_URL` and is not bound to this schema yet. `drizzle.config.ts` uses `DATABASE_URL_UNPOOLED` for `db:generate` and `db:migrate`. Migration SQL is written to `./drizzle`. The seed script does not change those files.
 - The schema does not store protected demographic attributes, scores, or an automated rank.

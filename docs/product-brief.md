@@ -16,7 +16,7 @@ The problem is volume and visibility. Applications arrive faster than they can b
 4. Choose the next pipeline stage. Screenline may later suggest an order, but the recruiter confirms every change.
 5. Check the related job so the decision stays tied to an opening, not to a detached list of names.
 
-Milestone 1 covers only the shell and a static overview of step 1, plus a preview of step 2. Later steps are not implemented.
+Milestone 1 covers only the shell and a static overview of step 1, plus a preview of step 2. The overview now reads those counts and recent applications from the demo PostgreSQL database. Applicants, Jobs, and Analytics remain placeholders.
 
 ## Prioritized MVP requirements
 
@@ -27,14 +27,14 @@ Milestone 1 covers only the shell and a static overview of step 1, plus a previe
 5. Explainable ordering of candidates. Any rank must state the job-relevant reasons behind it. Protected demographic attributes are not inputs.
 6. Durable storage so a recruiter’s updates remain after a refresh.
 
-Items 3 through 6 are later milestones. This iteration delivers item 1 and a static version of item 2.
+Items 3 through 6 are later milestones. The workspace shell is in place, and the overview reads pipeline counts and recent applications from PostgreSQL.
 
 ## Explicit assumptions
 
 - The first releases serve one recruiter in one workspace. Authentication and multiple organizations are out of scope until the product needs them.
 - A pipeline stage is a label the recruiter assigns. It is not an automated hire or reject decision.
-- Overview counts mean: all sample applicants; applicants whose stage is “In review”; applicants whose stage is “Shortlisted”; jobs whose status is “Active”.
-- Until a database exists, any people shown in the interface are fictional demonstration records with `@example.com` email addresses. The interface must say so and must not imply the records are stored.
+- Overview counts mean: all stored applications; applications whose stage is “In review”; applications whose stage is “Shortlisted”; jobs whose status is “Active”.
+- People shown in the interface are fictional demonstration records with `@example.com` email addresses. The interface must say so. The overview reads those records from the demo PostgreSQL database.
 - Desktop is the primary layout. Narrow screens still need working navigation and a readable table, including horizontal scrolling where a dense table would otherwise collapse.
 - Later ranking, if built, may use job-relevant signals such as stated skills, experience, and role match. It must not use protected demographic attributes, and each suggestion must be explainable.
 - The recruiter remains the decision maker. The product does not advance, reject, or contact a candidate on its own.
@@ -45,16 +45,15 @@ Items 3 through 6 are later milestones. This iteration delivers item 1 and a sta
 - TypeScript in strict mode.
 - Tailwind CSS for layout and visual styling.
 - shadcn/ui for controls such as cards, badges, tables, and buttons.
-- PostgreSQL with Drizzle for persistence in a later phase, once the recruiter can create and update real records.
-- No new runtime dependencies are required for the static shell.
+- PostgreSQL with Drizzle stores the fictional overview records. Creating and updating records is a later phase.
 
 ## Features intentionally excluded from the first iteration
 
-- Database, API routes, and authentication.
+- API routes and authentication.
 - CSV or resume import.
 - Candidate ranking, scoring, or automated stage changes.
 - Creating, editing, deleting, or filtering applicants and jobs.
-- Analytics beyond the four overview counts derived from sample data.
+- Analytics beyond the four overview counts.
 - Scheduling, email, offers, comments, and notifications.
 - Controls that look operational but do not perform an action.
 

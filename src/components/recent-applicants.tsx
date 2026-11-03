@@ -8,10 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  demoApplicants,
-  type ApplicantPreview,
-} from "@/lib/demo-data";
+import type { ApplicantPreview } from "@/lib/demo-data";
 
 const applicationDate = new Intl.DateTimeFormat("en-US", {
   month: "short",
@@ -26,8 +23,10 @@ function formatApplicationDate(isoDate: string): string {
 
 export function RecentApplicants({
   applicants,
+  totalApplications,
 }: {
   applicants: readonly ApplicantPreview[];
+  totalApplications: number;
 }) {
   return (
     <section
@@ -42,8 +41,7 @@ export function RecentApplicants({
           Recent applicants
         </h2>
         <p className="mt-0.5 text-xs text-slate-500">
-          Newest records in the demonstration set. This is a preview, not a
-          saved pipeline.
+          Newest applications in the database.
         </p>
       </div>
       <Table className="min-w-[44rem]">
@@ -64,7 +62,17 @@ export function RecentApplicants({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {applicants.map((applicant) => (
+          {applicants.length === 0 ? (
+            <TableRow>
+              <TableCell
+                colSpan={4}
+                className="px-4 text-sm whitespace-normal text-slate-500"
+              >
+                No applications are stored yet.
+              </TableCell>
+            </TableRow>
+          ) : (
+            applicants.map((applicant) => (
             <TableRow key={applicant.id}>
               <TableCell className="px-4 whitespace-normal">
                 <div className="font-medium text-slate-950">
@@ -84,12 +92,13 @@ export function RecentApplicants({
                 <StageBadge stage={applicant.stage} />
               </TableCell>
             </TableRow>
-          ))}
+            ))
+          )}
         </TableBody>
         <TableCaption className="mt-0 border-t border-slate-200 px-4 py-3 text-left text-xs text-slate-500">
-          Showing {applicants.length} of {demoApplicants.length} fictional
-          applicants, newest first. These rows are demonstration data and are
-          not saved.
+          Showing {applicants.length} of {totalApplications} fictional
+          applications, newest first. These rows are stored in the demo
+          PostgreSQL database.
         </TableCaption>
       </Table>
     </section>
