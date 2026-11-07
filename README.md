@@ -13,9 +13,11 @@ The product brief is in [docs/product-brief.md](docs/product-brief.md). The tabl
 - Counts for all applications, applications in review, shortlisted applications, and active jobs.
 - A recent-applications table with candidate, position, date, and stage.
 - Fictional demo records stored in PostgreSQL, labeled as demonstration data in the interface.
-- Placeholder pages for Applicants, Jobs, and Analytics. Those routes do not load or change records.
+- An applicant list that searches, filters, sorts, and pages through the stored applications. The list is read from PostgreSQL on the server.
+- A read-only application page for each stored application, including the candidate, job, notes, and stage history. The seeded database has no notes or events.
+- Placeholder pages for Jobs and Analytics. Those routes do not load or change records.
 
-These are not implemented: authentication, creating or editing records, filtering, applicant profiles, job management, notes, activity history, analytics, CSV import, ranking, and automated stage changes.
+These are not implemented: authentication, creating or editing records, job management, adding notes or stage history, analytics, CSV import, ranking, and automated stage changes.
 
 ## Stack and architecture
 
@@ -34,6 +36,9 @@ Runtime requests use the pooled `DATABASE_URL` from `src/db/client.ts`. That mod
 | Connection check | `scripts/db-check.ts` |
 | Data verification | `scripts/db-verify.ts` |
 | Overview page | `src/app/page.tsx` |
+| Applicant list | `src/app/applicants/page.tsx` |
+| Applicant queries | `src/db/queries/applicants.ts` |
+| Application detail | `src/app/applicants/[id]/page.tsx` |
 
 ## Local installation
 
@@ -116,9 +121,9 @@ npm run build
 
 ## Limitations and later milestones
 
-- Applicants, Jobs, and Analytics are labeled placeholders.
-- There is no way to create, edit, filter, or open a single application or job.
-- There is no authentication, organization model, CSV or resume import, search, or analytics beyond the four overview counts.
+- Jobs and Analytics are labeled placeholders.
+- Application detail pages are read-only. There is no way to create, edit, or delete an application, note, or job.
+- There is no authentication, organization model, CSV or resume import, or analytics beyond the four overview counts.
 - Notes, stage history, scheduling, email, and offers are not collected or shown.
 - The seed will not repair a row that was edited after insert, and it will not remove rows it did not create.
 - `npm run db:verify` describes the clean seeded database. It is not a migration tool.

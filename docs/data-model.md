@@ -1,6 +1,6 @@
 # Screenline data model
 
-This document describes the PostgreSQL schema in `src/db/schema.ts`. The tables are defined with Drizzle ORM. `npm run db:seed` inserts fictional jobs, candidates, and applications. It does not insert notes or events. The overview reads these tables through `src/db/queries/dashboard.ts`. `src/lib/demo-data.ts` still supplies the seed records and the stage labels.
+This document describes the PostgreSQL schema in `src/db/schema.ts`. The tables are defined with Drizzle ORM. `npm run db:seed` inserts fictional jobs, candidates, and applications. It does not insert notes or events. The overview reads these tables through `src/db/queries/dashboard.ts`. An application detail page reads one application with its candidate, job, notes, and events. The seed leaves notes and events empty. `src/lib/demo-data.ts` still supplies the seed records and the stage labels.
 
 ## Tables
 

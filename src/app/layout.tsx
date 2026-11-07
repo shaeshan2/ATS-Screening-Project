@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s · Screenline",
   },
   description:
-    "Screenline is a recruiter workspace for reviewing applications. This build shows a demonstration overview only.",
+    "Screenline is a recruiter workspace for reviewing fictional applications stored in the demo database.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -16,7 +16,7 @@ The problem is volume and visibility. Applications arrive faster than they can b
 4. Choose the next pipeline stage. Screenline may later suggest an order, but the recruiter confirms every change.
 5. Check the related job so the decision stays tied to an opening, not to a detached list of names.
 
-Milestone 1 covers only the shell and a static overview of step 1, plus a preview of step 2. The overview now reads those counts and recent applications from the demo PostgreSQL database. Applicants, Jobs, and Analytics remain placeholders.
+Milestone 1 covers only the shell and a static overview of step 1, plus a preview of step 2. The overview and the applicant list now read from the demo PostgreSQL database. The applicant list can be searched, filtered, sorted, and paged, and each row opens a read-only application. Jobs and Analytics remain placeholders.
 
 ## Prioritized MVP requirements
 

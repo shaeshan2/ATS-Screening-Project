@@ -7,7 +7,12 @@ export const navigation = [
 
 export type NavItem = (typeof navigation)[number];
 
+export function isNavItemActive(pathname: string, href: string): boolean {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export function sectionTitleForPath(pathname: string): string {
-  const match = navigation.find((item) => item.href === pathname);
+  const match = navigation.find((item) => isNavItemActive(pathname, item.href));
   return match?.label ?? "Screenline";
 }

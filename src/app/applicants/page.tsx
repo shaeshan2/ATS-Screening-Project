@@ -1,16 +1,21 @@
 import type { Metadata } from "next";
-import { PlaceholderPage } from "@/components/placeholder-page";
+import { Suspense } from "react";
+import { ApplicantResults } from "@/components/applicant-results";
+import { ApplicantsErrorBoundary } from "@/components/applicants-error";
+import { ApplicantsLoading } from "@/components/applicants-loading";
 
 export const metadata: Metadata = {
   title: "Applicants",
-  description: "Applicant management is planned for a later milestone.",
+  description:
+    "Search, filter, and review fictional applications stored in the demo database.",
 };
 
-export default function ApplicantsPage() {
+export default function ApplicantsPage(props: PageProps<"/applicants">) {
   return (
-    <PlaceholderPage
-      heading="Applicant management is coming in a later milestone"
-      body="Reviewing, filtering, and updating individual applications is not part of this milestone. This page does not load or save applicant records."
-    />
+    <ApplicantsErrorBoundary>
+      <Suspense fallback={<ApplicantsLoading />}>
+        <ApplicantResults searchParams={props.searchParams} />
+      </Suspense>
+    </ApplicantsErrorBoundary>
   );
 }

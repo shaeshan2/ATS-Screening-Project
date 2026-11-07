@@ -2,7 +2,11 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { navigation, sectionTitleForPath } from "@/lib/navigation";
+import {
+  isNavItemActive,
+  navigation,
+  sectionTitleForPath,
+} from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 import {
   BarChart3,
@@ -15,7 +19,14 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type Ref,
+} from "react";
 
 const navIcons: Record<(typeof navigation)[number]["href"], LucideIcon> = {
   "/": LayoutDashboard,
@@ -24,13 +35,77 @@ const navIcons: Record<(typeof navigation)[number]["href"], LucideIcon> = {
   "/analytics": BarChart3,
 };
 
-export function AppShell({ children }: { children: ReactNode }) {
+function PrimaryNavLinks({
+  pathname,
+  onNavigate,
+  firstLinkRef,
+}: {
+  pathname: string | null;
+  onNavigate: () => void;
+  firstLinkRef: Ref<HTMLAnchorElement>;
+}) {
+  return (
+    <ul className="space-y-1">
+      {navigation.map((item, index) => {
+        const active = pathname
+          ? isNavItemActive(pathname, item.href)
+          : false;
+        const Icon = navIcons[item.href];
+        return (
+          <li key={item.href}>
+            <Link
+              ref={index === 0 ? firstLinkRef : undefined}
+              href={item.href}
+              aria-current={active ? "page" : undefined}
+              onClick={onNavigate}
+              className={cn(
+                "flex items-center gap-2.5 rounded-md border-l-2 px-3 py-2 text-sm font-medium transition-colors",
+                "outline-none focus-visible:ring-2 focus-visible:ring-teal-300 focus-visible:ring-offset-2 focus-visible:ring-offset-navy",
+                active
+                  ? "border-teal-300 bg-white/10 text-white"
+                  : "border-transparent text-white/75 hover:bg-white/10 hover:text-white",
+              )}
+            >
+              <Icon aria-hidden="true" className="size-4" />
+              {item.label}
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function PrimaryNav({
+  onNavigate,
+  firstLinkRef,
+}: {
+  onNavigate: () => void;
+  firstLinkRef: Ref<HTMLAnchorElement>;
+}) {
   const pathname = usePathname();
+  return (
+    <PrimaryNavLinks
+      pathname={pathname}
+      onNavigate={onNavigate}
+      firstLinkRef={firstLinkRef}
+    />
+  );
+}
+
+function SectionHeading() {
+  const pathname = usePathname();
+  return (
+    <h1 className="truncate text-base font-semibold tracking-tight text-slate-950">
+      {sectionTitleForPath(pathname)}
+    </h1>
+  );
+}
+
+export function AppShell({ children }: { children: ReactNode }) {
   const [navOpen, setNavOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
-  const sectionTitle = sectionTitleForPath(pathname);
-
   useEffect(() => {
     if (!navOpen) {
       return;
@@ -110,32 +185,20 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
 
         <nav aria-label="Primary" className="px-3 py-4">
-          <ul className="space-y-1">
-            {navigation.map((item, index) => {
-              const active = pathname === item.href;
-              const Icon = navIcons[item.href];
-              return (
-                <li key={item.href}>
-                  <Link
-                    ref={index === 0 ? firstLinkRef : undefined}
-                    href={item.href}
-                    aria-current={active ? "page" : undefined}
-                    onClick={() => setNavOpen(false)}
-                    className={cn(
-                      "flex items-center gap-2.5 rounded-md border-l-2 px-3 py-2 text-sm font-medium transition-colors",
-                      "outline-none focus-visible:ring-2 focus-visible:ring-teal-300 focus-visible:ring-offset-2 focus-visible:ring-offset-navy",
-                      active
-                        ? "border-teal-300 bg-white/10 text-white"
-                        : "border-transparent text-white/75 hover:bg-white/10 hover:text-white",
-                    )}
-                  >
-                    <Icon aria-hidden="true" className="size-4" />
-                    {item.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          <Suspense
+            fallback={
+              <PrimaryNavLinks
+                pathname={null}
+                onNavigate={() => setNavOpen(false)}
+                firstLinkRef={firstLinkRef}
+              />
+            }
+          >
+            <PrimaryNav
+              onNavigate={() => setNavOpen(false)}
+              firstLinkRef={firstLinkRef}
+            />
+          </Suspense>
         </nav>
 
         <p className="mt-auto border-t border-white/10 px-4 py-4 text-xs leading-5 text-white/60">
@@ -159,9 +222,15 @@ export function AppShell({ children }: { children: ReactNode }) {
           >
             {navOpen ? <X /> : <Menu />}
           </Button>
-          <h1 className="truncate text-base font-semibold tracking-tight text-slate-950">
-            {sectionTitle}
-          </h1>
+          <Suspense
+            fallback={
+              <h1 className="truncate text-base font-semibold tracking-tight text-slate-950">
+                Screenline
+              </h1>
+            }
+          >
+            <SectionHeading />
+          </Suspense>
           <Badge
             variant="outline"
             className="ml-auto shrink-0 border-teal-200 bg-teal-50 text-teal-800"
